@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Card from "../../components/ui/Card";
-import classes from "../../styles/today-page.module.css";
 import axios from "axios";
 import { MongoClient } from "mongodb";
 import TodoItem from "../../components/todos/TodoItem";
@@ -9,13 +8,14 @@ export default function TodayPage({ todos }) {
   const [newTaskOpen, setNewTaskOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-
   const [tasks, setTasks] = useState(todos);
 
+  const removeTodo = (id) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
+  };
+
   const todoList = tasks.map((task, index) => {
-    return (
-      <TodoItem todo={task} key={index}/>
-    );
+    return <TodoItem todo={task} key={index} onRemove={removeTodo} />;
   });
 
   async function handleAddTask() {
@@ -34,11 +34,10 @@ export default function TodayPage({ todos }) {
         description: data.description,
         completed: data.completed,
       };
-      setTasks((prevTasks)=>[...prevTasks, newTodo]);
+      setTasks((prevTasks) => [...prevTasks, newTodo]);
     } catch (error) {
       console.error(error);
     }
-    
   }
 
   function cancelAddTask() {
@@ -72,8 +71,8 @@ export default function TodayPage({ todos }) {
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
             ></textarea>
-            <div className={classes["action-buttons-div"]}>
-              <div className={classes["button-wrapper"]}>
+            <div className="action-buttons-div">
+              <div className="button-wrapper">
                 <button
                   className="btn btn-outline-secondary"
                   onClick={cancelAddTask}
@@ -81,7 +80,7 @@ export default function TodayPage({ todos }) {
                   Cancel
                 </button>
               </div>
-              <div className={classes["button-wrapper"]}>
+              <div className="button-wrapper">
                 <button
                   className="btn btn-outline-success"
                   onClick={handleAddTask}
