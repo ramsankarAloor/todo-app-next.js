@@ -1,0 +1,17 @@
+.add-task-button {
+  border-color: transparent;
+  background-color: transparent;
+  color: #77002e;
+}
+.add-task-button:hover {
+  border-color: #77002e;
+}
+.action-buttons-div {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+}
+.button-wrapper {
+  display: inline-block;
+  margin-left: 1rem;
+}
