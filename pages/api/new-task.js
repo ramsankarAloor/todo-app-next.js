@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
 async function handler(req, res) {
   if (req.method === "POST") {
@@ -14,10 +14,17 @@ async function handler(req, res) {
 
     try {
       const db = client.db();
-      const meetupsCollection = db.collection("todos");
-      await meetupsCollection.insertOne(data);
-      return res.status(201).json({ message: "Task created!" });
+      const todosCollection = db.collection("todos");
+      const result = await todosCollection.insertOne(data);
+      const insertedId = result.insertedId;
+
+      const insertedTask = await todosCollection.findOne({ _id: insertedId });
+
+      return res
+        .status(201)
+        .json(insertedTask);
     } catch (error) {
+      console.error("Error creating task:", error);
       return res.status(500).json({ error: "Error in task creation." });
     } finally {
       client.close();
@@ -28,4 +35,3 @@ async function handler(req, res) {
 }
 
 export default handler;
-
